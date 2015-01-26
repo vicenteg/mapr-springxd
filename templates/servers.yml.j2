@@ -1,0 +1,18 @@
+spring:
+  profiles: singlenode
+  hadoop:
+   fsUri: maprfs:///
+xd:
+  transport: local
+XD_JMX_ENABLED: true
+endpoints:
+  jolokia:
+    enabled: ${XD_JMX_ENABLED:true}
+  jmx:
+    enabled: ${XD_JMX_ENABLED:true}
+    uniqueNames: true
+zk:
+  namespace: xd
+  client:
+     connect: {{zookeepers.stdout}}
+

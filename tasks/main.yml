@@ -1,0 +1,31 @@
+---
+# tasks file for mapr-springxd
+
+  - name: copy MapR jars for hadoop24
+    copy: src=/opt/mapr/lib/{{item}} dest={{spring_home}}/xd/lib/hadoop24/{{item}}
+    with_items:
+      - hadoop-auth-2.4.1.jar
+      - hadoop-0.20.2-dev-core.jar
+      - hadoop-common-2.4.1.jar
+      - maprfs-4.0.1-mapr.jar
+      - json-20080701.jar 
+
+  - name: copy MapR jars for xd-shell
+    copy: src=/opt/mapr/lib/{{item}} dest={{spring_home}}/shell/lib/{{item}}
+    with_items:
+      - hadoop-auth-2.4.1.jar
+      - hadoop-0.20.2-dev-core.jar
+      - hadoop-common-2.4.1.jar
+      - maprfs-4.0.1-mapr.jar
+      - json-20080701.jar 
+
+  - name: get zookeeper ensemble
+    command: maprcli node listzookeepers -noheader
+    register: zookeepers
+
+  - name: get CLDB master
+    shell: maprcli node cldbmaster -noheader  | awk '{print $4}'
+    register: cldbmaster
+
+  - name: copy servers.xml
+    template: src=servers.yml.j2 dest={{spring_home}}/xd/config/servers.yml
